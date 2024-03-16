@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
+    <title>Список завдань</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="create-task-block">
+        <form class="create-task-form">
+          <h3 class="task-title">Нове завдання</h3>
+          <div class="input-field">
+            <input type="text" name="task" class="task-input" maxlength="28" />
+          </div>
+          <button type="submit" class="btn">Додати завдання</button>
+        </form>
+      </div>
+
+      <div class="filter-task-block">
+        <h3 class="task-title">Список завдань</h3>
+        <div class="input-field">
+          <input
+            type="text"
+            name="filter"
+            class="filter-input"
+            placeholder="Пошук завдань"
+          />
+        </div>
+        <ul class="collection"></ul>
+        <button class="clear-tasks">Видалити всі завдання</button>
+      </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+  </body>
+</html>
