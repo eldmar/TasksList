@@ -15,9 +15,8 @@ const getTasksFromStorage = () => {
   return JSON.parse(localStorage.getItem(TASKS_STORAGE_KEY)) || [];
 };
 
-const storeTaskInStorage = (taskText, taskId) => {
+const storeTaskInStorage = (newTask) => {
   const tasks = getTasksFromStorage();
-  const newTask = { id: taskId, text: taskText };
   tasks.push(newTask);
 
   localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
@@ -27,22 +26,24 @@ const clearTasksFromStorage = () => {
   localStorage.removeItem(TASKS_STORAGE_KEY);
 };
 
-const removeTaskFromStorage = (taskId) => {
+const removeTaskFromStorage = (index) => {
   const tasks = getTasksFromStorage();
-  const updatedTasks = tasks.filter((task) => task.id !== taskId);
 
-  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(updatedTasks));
+  tasks.splice(index, 1);
+
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
 };
 
 //
 
 // "tasks" functions
-const appendLi = (task) => {
+const appendLi = (value, index) => {
   // Create and add LI element
   const li = document.createElement("li");
-  li.setAttribute("data-id", task.id);
 
-  li.innerHTML = `${task.text} <i class="fa fa-remove delete-item"></i>`;
+  // li.textContent = value; // Значення яке ввів користувач
+  li.innerHTML = `${value} <i class="fa fa-edit edit-item"></i><i class="fa fa-remove delete-item"></i>`;
+  li.setAttribute("data-id", index);
   taskList.append(li);
 };
 
@@ -54,12 +55,9 @@ const addTask = (event) => {
   if (value === "") {
     return;
   }
-  // Генеруєм унікальний ID
-  const taskId = Date.now().toString();
+  const tasks = getTasksFromStorage();
 
-  storeTaskInStorage(value, taskId);
-
-  appendLi({ id: taskId, text: value });
+  appendLi(value, tasks.length);
 
   // Очистити форму
   // 1 - скидає значення у input'a taskInput
@@ -69,6 +67,9 @@ const addTask = (event) => {
 
   // Фокусуємось на input
   taskInput.focus();
+
+  // Зберігаємо елемент у localStorage
+  storeTaskInStorage(value);
 };
 
 const clearTasks = () => {
@@ -88,12 +89,30 @@ const removeTask = (event) => {
   }
 
   const li = event.target.closest("li");
-  const taskId = li.getAttribute("data-id");
+  const index = parseInt(li.getAttribute("data-id"), 10);
   li.remove();
 
   // Видалити зі сховища
 
-  removeTaskFromStorage(taskId);
+  removeTaskFromStorage(index);
+};
+
+const editTask = (event) => {
+  const isEditButton = event.target.classList.contains("edit-item");
+  if (!isEditButton) {
+    return;
+  }
+
+  const li = event.target.closest("li");
+  const currentTask = li.textContent;
+  const newTaskText = prompt("Редагувати завдання:", currentTask);
+
+  if (newTaskText === null || newTaskText.trim() === "") {
+    return;
+  }
+  const index = li.getAttribute("data-id");
+  li.innerHTML = `${newTaskText} <i class="fa fa-edit edit-item"></i><i class="fa fa-remove delete-item"></i>`;
+  li.setAttribute("data-id", index);
 };
 
 const filterTasks = ({ target: { value } }) => {
@@ -103,6 +122,11 @@ const filterTasks = ({ target: { value } }) => {
   list.forEach((li) => {
     const liText = li.textContent.trim().toLowerCase();
 
+    // if (liText.includes(text)) {
+    //   li.hidden = false;
+    // } else {
+    //   li.hidden = true;
+    // }
     li.hidden = !liText.includes(text);
   });
 };
@@ -110,7 +134,7 @@ const filterTasks = ({ target: { value } }) => {
 const initTasks = () => {
   const tasks = getTasksFromStorage();
   // tasks.forEach((task) => appendLi(task));
-  tasks.forEach(appendLi);
+  tasks.forEach((task, index) => appendLi(task, index));
 };
 
 // Init
@@ -126,4 +150,4 @@ taskList.addEventListener("click", removeTask);
 
 filterInput.addEventListener("input", filterTasks);
 
-// 12
+taskList.addEventListener("click", editTask);

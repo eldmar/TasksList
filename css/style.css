@@ -83,6 +83,7 @@ input::placeholder {
 }
 .fa-remove {
   color: #a03d3d;
+  padding-left: 5px;
 }
 .fa-edit {
   color: #83afd8;
