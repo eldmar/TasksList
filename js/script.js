@@ -33,7 +33,13 @@ const removeTaskFromStorage = (index) => {
 
   localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
 };
+const updateTaskInStorage = (index, newTaskText) => {
+  const tasks = getTasksFromStorage();
 
+  tasks[index] = newTaskText;
+
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+};
 //
 
 // "tasks" functions
@@ -111,8 +117,8 @@ const editTask = (event) => {
     return;
   }
   const index = li.getAttribute("data-id");
-  li.innerHTML = `${newTaskText} <i class="fa fa-edit edit-item"></i><i class="fa fa-remove delete-item"></i>`;
-  li.setAttribute("data-id", index);
+  li.firstChild.textContent = newTaskText;
+  updateTaskInStorage(index, newTaskText);
 };
 
 const filterTasks = ({ target: { value } }) => {
@@ -133,8 +139,8 @@ const filterTasks = ({ target: { value } }) => {
 
 const initTasks = () => {
   const tasks = getTasksFromStorage();
-  // tasks.forEach((task) => appendLi(task));
-  tasks.forEach((task, index) => appendLi(task, index));
+  tasks.forEach((task) => appendLi(task));
+  // tasks.forEach((task, index) => appendLi(task, index));
 };
 
 // Init
