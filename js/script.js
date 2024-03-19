@@ -139,8 +139,8 @@ const filterTasks = ({ target: { value } }) => {
 
 const initTasks = () => {
   const tasks = getTasksFromStorage();
-  tasks.forEach((task) => appendLi(task));
-  // tasks.forEach((task, index) => appendLi(task, index));
+
+  tasks.forEach((task, index) => appendLi(task, index));
 };
 
 // Init
